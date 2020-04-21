@@ -10,9 +10,7 @@ class Calls(generics.CreateAPIView):
         isActive = request.POST.get("isActive")
         if isActive == '1':
             content = """<?xml version="1.0" encoding="utf-8"?> <Response> <GetDigits timeout="10" finishOnKey="#" 
-            callbackUrl=""> <Say>Welcome to Furaha Bank. Your bank of choice. Please press one followed by hash for 
-            English. Please press two followed by hash for Kiswahili</Say> </GetDigits> <Say>We did not get any 
-            response. Good bye</Say> </Response> """
+            callbackUrl="https://c31a6d18.ngrok.io/call/select_service/"> <Say>Welcome to Furaha Bank. Your bank of choice. Please press one followed by hash for English. Please press two followed by hash for Kiswahili</Say> </GetDigits> <Say>We did not get any response. Good bye</Say> </Response> """
             response = HttpResponse(content, content_type="application/xml; charset=utf-8")
             response['Content-Length'] = len(content)
 
@@ -28,17 +26,14 @@ class ServiceSelection(generics.CreateAPIView):
             digits = request.POST.get("dtmfDigits")
             if digits == '1':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl=""><Say>For Account balance please press one followed by hash. For last deposit please 
-                press two. For last withdrawal please press three and to speak to a customer agent please press 
-                four</Say></GetDigits> <Say>We did not get any response. Good bye</Say></Response> """
+                callbackUrl="https://c31a6d18.ngrok.io/call/account_number/"><Say>For Account balance please press one followed by hash. For last deposit please press two. For last withdrawal please press three. To speak to a customer agent please press four</Say></GetDigits> <Say>We did not get any response. Good bye</Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
                 return response
 
             elif digits == '2':
-                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Thank you for selecting 
-                Kiswahili</Say></Response> """
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Thank you for selecting Kiswahili</Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -63,8 +58,7 @@ class EnterAccountNumber(generics.CreateAPIView):
 
             elif digits == '2':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl=""><Say>Please enter your account number followed by hash to receive your last deposit 
-                amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                callbackUrl="https://c31a6d18.ngrok.io/call/last_deposit/"><Say>Please enter your account number followed by hash to receive your last deposit amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -91,34 +85,35 @@ class EnterAccountNumber(generics.CreateAPIView):
 
 
 class ObtainUserDeposit(generics.CreateAPIView):
-    def post(self, request, *args, **kwargs):
+
+    def post(self, request, count=[], *args, **kwargs):
         isActive = request.POST.get("isActive")
-        count = 0
+        count.append(1)
         if isActive == '1':
             digits = request.POST.get("dtmfDigits")
-            try:
-                deposit = UserBankDetails.objects.filter(account_number=digits).first()
-                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>""" + deposit.user_id.first_name + """your last deposit is""" + deposit.deposit + """</Say></Response> """
+            deposit = UserBankDetails.objects.filter(account_number=digits).first()
+            if deposit is not None:
+                fname = str(deposit.user_id.first_name)
+                lname = str(deposit.user_id.last_name)
+                deposit_amount = str(deposit.deposit)
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say> """ + fname + """ """ + lname + """ your last deposit is """ + deposit_amount + """ shillings </Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
                 return response
 
-            except ObjectDoesNotExist:
-                if count < 3:
+            else:
+                length = len(count)
+                if length < 4:
                     content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
-                    finishOnKey="#" callbackUrl=""><Say>Account does not exist. Please enter the correct account number 
-                    followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                    finishOnKey="#" callbackUrl="https://c31a6d18.ngrok.io/call/last_deposit/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                     response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                     response['Content-Length'] = len(content)
-
-                    count += 1
 
                     return response
 
                 else:
-                    content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Number of attempts exceeded. 
-                    Goodbye</Say></Response>"""
+                    content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Number of attempts exceeded. Goodbye</Say></Response>"""
                     response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                     response['Content-Length'] = len(content)
 
