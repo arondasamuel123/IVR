@@ -2,6 +2,7 @@ from rest_framework import generics
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from .models import UserBankDetails
+from .serializers import SessionSerializer
 
 
 # Create your views here.
@@ -137,6 +138,7 @@ class ObtainUserDeposit(generics.CreateAPIView):
 class GetAccountBalance(generics.CreateAPIView):
     def post(self,request,count=[],*args,**kwargs):
         isActive=request.POST.get("isActive")
+        count.append(1)
         if isActive=='1':
             digits=request.POST.get("dtmfDigits")
             if digits=='1':
@@ -144,26 +146,19 @@ class GetAccountBalance(generics.CreateAPIView):
                 if account_balance is not None:
                     fname = str(account_balance.user_id.first_name)
                     amount_balance=str(account_balance.account_balance)
-                    content = """<?xml version="1.0" encoding="utf-8"?><Response><Say> """ + fname + """ """ + """ your account balance is """ + amount_balance + """ shillings </Say></Response> """
+                    content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
+                    finishOnKey="#" callbackUrl="http://fddb8f91.ngrok.io/call/account_balance/"><Say>""" + fname + """ """ + """ your last deposit is """ + amount_balance + """ shillings </Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                     response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                     response['Content-Length'] = len(content)
             return response
 
+    
+
         else:
-                length = len(count)
-                if length < 4:
-                    content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
-                    finishOnKey="#" callbackUrl="http://fddb8f91.ngrok.io/call/account_balance/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
-                    response = HttpResponse(content, content_type="application/xml; charset=utf-8")
-                    response['Content-Length'] = len(content)
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Number of attempts exceeded. Goodbye</Say></Response>"""
+                response = HttpResponse(content, content_type="application/xml; charset=utf-8")
+                response['Content-Length'] = len(content)
 
-                    return response
-
-                else:
-                    content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Number of attempts exceeded. Goodbye</Say></Response>"""
-                    response = HttpResponse(content, content_type="application/xml; charset=utf-8")
-                    response['Content-Length'] = len(content)
-
-                    return response
+                return response
 
         return HttpResponse("Ok")
