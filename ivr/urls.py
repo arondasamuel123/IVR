@@ -1,7 +1,10 @@
 from django.urls import path
-from .views import Calls, CallResponseForLanguage
+from .views import Calls, EnterAccountNumber, GetLastWithdraw
 
 urlpatterns = [
     path('calls/', Calls.as_view(), name='calls'),
-    path('call/response/', CallResponseForLanguage.as_view(), name='language_response'),
+    path('call/account_balance/', EnterAccountNumber.as_view(), name='account_balance'),
+    path('call/last_withdraw/', GetLastWithdraw.as_view(), name='last_withdraw'),
+
+    
 ]
