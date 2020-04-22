@@ -133,3 +133,11 @@ class ObtainUserDeposit(generics.CreateAPIView):
                     return response
 
         return HttpResponse("Ok")
+
+class GetAccountBalance(generics.CreateAPIView):
+    def post(self,request,count=[],*args,**kwargs):
+        isActive=request.POST.get("isActive")
+        if isActive=='1':
+            digits=request.POST.get("dtmfDigits")
+            if digits=='1':
+                deposit

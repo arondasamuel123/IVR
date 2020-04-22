@@ -2,3 +2,5 @@ virtual/
 *.pyc
 .vscode
 .env
+Pipfile
+Pipfile.lock
