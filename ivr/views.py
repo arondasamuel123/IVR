@@ -63,7 +63,7 @@ class EnterAccountNumber(generics.CreateAPIView):
             digits = request.POST.get("dtmfDigits")
             if digits == '1':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl=""><Say>Please enter your account number followed by hash to receive account 
+                callbackUrl="http://fddb8f91.ngrok.io/call/account_balance/"><Say>Please enter your account number followed by hash to receive account 
                 balance</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response>"""
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
