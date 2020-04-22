@@ -139,7 +139,7 @@ class GetLastWithdraw(generics.CreateAPIView):
         isActive = request.POST.get("isActive")
         count.append(1)
 
-        if isActive=='3':
+        if isActive=='1':
             digits=request.POST.get("dtmfDigits")
             withdrawal = UserBankDetails.objects.filter(account_number=digits).first()
 
