@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Calls, ServiceSelection, EnterAccountNumber, ObtainUserDeposit
+from .views import Calls, ServiceSelection, EnterAccountNumber, ObtainUserDeposit,GetAccountBalance
 
 urlpatterns = [
     path('calls/', Calls.as_view(), name='calls'),
