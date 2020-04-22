@@ -88,7 +88,7 @@ class EnterAccountNumber(generics.CreateAPIView):
 
             elif digits == '4':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>You will shortly be redirected to 
-                customer care agent</Say></Response> """
+                customer care agent</Say><Dial>+257774795342</Dial></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
