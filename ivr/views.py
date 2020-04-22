@@ -24,9 +24,22 @@ class ServiceSelection(generics.CreateAPIView):
         isActive = request.POST.get("isActive")
         if isActive == '1':
             digits = request.POST.get("dtmfDigits")
+            session_id = request.POST.get("sessionId")
+            phone_number = request.POST.get("callerNumber")
+            direction = request.POST.get("direction")
+            data = {'session_id':session_id,'caller_number':phone_number,'dtmfDigits':digits, 'direction':direction}
+            serializers = SessionSerializer(data=data)
+            if serializers.is_valid():
+                serializers.save()
             if digits == '1':
-                content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl="https://c31a6d18.ngrok.io/call/account_number/"><Say>For Account balance please press one followed by hash. For last deposit please press two. For last withdrawal please press three. To speak to a customer agent please press four</Say></GetDigits> <Say>We did not get any response. Good bye</Say></Response> """
+      
+                content = """ <?xml version="1.0" encoding="utf-8"?> <Response> <GetDigits timeout="10" finishOnKey="#" 
+            callbackUrl=""> <Say>Please select your service followed by hash.
+                                 Press 1 to check your account balance
+                                 Press 2 to check your last deposit
+                                 Press 3 to check your last withdraw
+                                 Press 4 to speak to an agent </Say> </Response> """
+        
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
