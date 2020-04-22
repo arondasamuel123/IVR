@@ -140,4 +140,24 @@ class GetAccountBalance(generics.CreateAPIView):
         if isActive=='1':
             digits=request.POST.get("dtmfDigits")
             if digits=='1':
-                deposit
+                account_balance=UserBankDetails.objects.filter(account_number=digits).first()
+                if account_balance is not None:
+                    fname = str(account_balance.user_id.first_name)
+                    amount_balance=str(account_balance.account_balance)
+                    content = """<?xml version="1.0" encoding="utf-8"?><Response><Say> """ + fname + """ """ + """ your account balance is """ + amount_balance + """ shillings </Say></Response> """
+                    response = HttpResponse(content, content_type="application/xml; charset=utf-8")
+                    response['Content-Length'] = len(content)
+            return response
+
+        elif digits == '2':
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
+                callbackUrl="https://c31a6d18.ngrok.io/call/last_deposit/"><Say>Please enter your account number followed by hash to receive your last deposit amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                response = HttpResponse(content, content_type="application/xml; charset=utf-8")
+                response['Content-Length'] = len(content)
+
+                return response
+
+
+         
+                     
+        
