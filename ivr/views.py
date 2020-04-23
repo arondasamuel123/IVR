@@ -174,3 +174,33 @@ class GetLastWithdraw(generics.CreateAPIView):
                     return response
         return HttpResponse("Ok")
 
+class GetAccountBalance(generics.CreateAPIView):
+    def post(self,request,count=[],*args,**kwargs):
+        isActive=request.POST.get("isActive")
+        count.append(1)
+        if isActive=='1':
+            digits=request.POST.get("dtmfDigits")
+            if digits=='1':
+                account_balance=UserBankDetails.objects.filter(account_number=digits).first()
+                if account_balance is not None:
+                    fname = str(account_balance.user_id.first_name)
+                    amount_balance=str(account_balance.account_balance)
+                    content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
+                    finishOnKey="#" callbackUrl="http://fddb8f91.ngrok.io/call/account_balance/"><Say>""" + fname + """ """ + """ your account balance is """ + amount_balance + """ shillings </Say></Response> """
+                    response = HttpResponse(content, content_type="application/xml; charset=utf-8")
+                    response['Content-Length'] = len(content)
+            return response
+        else:
+                length = len(count)
+                if length < 4:
+                    content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
+                    finishOnKey="#" callbackUrl=""http://fddb8f91.ngrok.io/call/account_balance/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                    response = HttpResponse(content, content_type="application/xml; charset=utf-8")
+                    response['Content-Length'] = len(content)
+                    return response
+                else:
+                    content = """<?xml version="1.0" encoding="utf-8"?><Response><Say>Number of attempts exceeded. Goodbye</Say></Response>"""
+                    response = HttpResponse(content, content_type="application/xml; charset=utf-8")
+                    response['Content-Length'] = len(content)
+                    return response
+        return HttpResponse("Ok")
