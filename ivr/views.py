@@ -10,7 +10,7 @@ class Calls(generics.CreateAPIView):
         isActive = request.POST.get("isActive")
         if isActive == '1':
             content = """<?xml version="1.0" encoding="utf-8"?> <Response> <GetDigits timeout="10" finishOnKey="#" 
-            callbackUrl="https://c31a6d18.ngrok.io/call/select_service/"> <Say>Welcome to Furaha Bank. Your bank of choice. Please press one followed by hash for English. Please press two followed by hash for Kiswahili</Say> </GetDigits> <Say>We did not get any response. Good bye</Say> </Response> """
+            callbackUrl="https://262563e5.ngrok.io/call/select_service/"> <Say>Welcome to Furaha Bank. Your bank of choice. Please press one followed by hash for English. Please press two followed by hash for Kiswahili</Say> </GetDigits> <Say>We did not get any response. Good bye</Say> </Response> """
             response = HttpResponse(content, content_type="application/xml; charset=utf-8")
             response['Content-Length'] = len(content)
 
@@ -64,7 +64,7 @@ class EnterAccountNumber(generics.CreateAPIView):
 
             if digits == '1':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl=""><Say>Please enter your account number followed by hash to receive account balance</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response>"""
+                callbackUrl="https://262563e5.ngrok.io/call/account_balance/"><Say>Please enter your account number followed by hash to receive account balance</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response>"""
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -72,7 +72,7 @@ class EnterAccountNumber(generics.CreateAPIView):
 
             elif digits == '2':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl="https://c31a6d18.ngrok.io/call/last_deposit/"><Say>Please enter your account number followed by hash to receive your last deposit amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                callbackUrl="https://262563e5.ngrok.io/call/last_deposit/"><Say>Please enter your account number followed by hash to receive your last deposit amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -80,7 +80,7 @@ class EnterAccountNumber(generics.CreateAPIView):
 
             elif digits == '3':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
-                callbackUrl=""><Say>Please enter your account number followed by hash to receive your last withdrawal amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                callbackUrl="https://262563e5.ngrok.io/last_withdrawal/"><Say>Please enter your account number followed by hash to receive your last withdrawal amount</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -126,7 +126,7 @@ class ObtainUserDeposit(generics.CreateAPIView):
                 length = len(count)
                 if length < 4:
                     content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
-                    finishOnKey="#" callbackUrl="https://c31a6d18.ngrok.io/call/last_deposit/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                    finishOnKey="#" callbackUrl="https://262563e5.ngrok.io/call/last_deposit/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                     response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                     response['Content-Length'] = len(content)
 
@@ -172,7 +172,7 @@ class GetLastWithdraw(generics.CreateAPIView):
                 length = len(count)
                 if length < 4:
                     content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
-                    finishOnKey="#" callbackUrl="https://c31a6d18.ngrok.io/call/last_withdraw/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
+                    finishOnKey="#" callbackUrl="https://262563e5.ngrok.io/call/last_withdrawal/"><Say>The account does not exist. Please enter the correct account number followed by hash</Say></GetDigits><Say>We did not get any response. Good bye</Say></Response> """
                     response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                     response['Content-Length'] = len(content)
                     return response
@@ -206,7 +206,7 @@ class GetAccountBalance(generics.CreateAPIView):
                 lname = str(account_balance.user_id.last_name)
                 amount_balance = str(account_balance.account_balance)
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
-                finishOnKey="#" callbackUrl="http://fddb8f91.ngrok.io/call/account_balance/"><Say>""" + fname + """ """ + lname + """ your account balance is """ + amount_balance + """ shillings. Goodbye. </Say></Response> """
+                finishOnKey="#" callbackUrl="https://262563e5.ngrok.io/call/account_balance/"><Say>""" + fname + """ """ + lname + """ your account balance is """ + amount_balance + """ shillings. Goodbye. </Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 

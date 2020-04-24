@@ -28,7 +28,7 @@ class UserBankDetails(models.Model):
     withdrawal = models.CharField(max_length=30)
     account_balance = models.CharField(max_length=30)
 
-    user_id = models.OneToOneField(User, on_delete=models.CASCADE)
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.account_number
