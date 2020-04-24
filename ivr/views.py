@@ -111,7 +111,7 @@ class ObtainUserDeposit(generics.CreateAPIView):
             if serializers.is_valid():
                 serializers.save()
 
-            deposit = UserBankDetails.objects.filter(account_number=digits).first()
+            deposit = UserBankDetails.objects.filter(account_number=digits).last()
             if deposit is not None:
                 fname = str(deposit.user_id.first_name)
                 lname = str(deposit.user_id.last_name)
@@ -157,7 +157,7 @@ class GetLastWithdraw(generics.CreateAPIView):
             if serializers.is_valid():
                 serializers.save()
 
-            withdrawal = UserBankDetails.objects.filter(account_number=digits).first()
+            withdrawal = UserBankDetails.objects.filter(account_number=digits).last()
             if withdrawal is not None:
                 fname = str(withdrawal.user_id.first_name)
                 lname = str(withdrawal.user_id.last_name)
@@ -200,7 +200,7 @@ class GetAccountBalance(generics.CreateAPIView):
             if serializers.is_valid():
                 serializers.save()
 
-            account_balance = UserBankDetails.objects.filter(account_number=digits).first()
+            account_balance = UserBankDetails.objects.filter(account_number=digits).last()
             if account_balance is not None:
                 fname = str(account_balance.user_id.first_name)
                 lname = str(account_balance.user_id.last_name)
