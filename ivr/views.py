@@ -31,7 +31,7 @@ class ServiceSelection(generics.CreateAPIView):
             serializers = SessionSerializer(data=data)
             if serializers.is_valid():
                 serializers.save()
-            if digits == '1':
+            if digits == '1' or digits == '0':
                 content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" finishOnKey="#" 
                 callbackUrl="https://262563e5.ngrok.io/call/account_number/"><Say>For Account balance please press one followed by hash. For last deposit please press two followed by hash. For last withdrawal please press three followed by hash. To speak to a customer agent please press four followed by hash</Say></GetDigits> <Say>We did not get any response. Good bye</Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
@@ -116,7 +116,7 @@ class ObtainUserDeposit(generics.CreateAPIView):
                 fname = str(deposit.user_id.first_name)
                 lname = str(deposit.user_id.last_name)
                 deposit_amount = str(deposit.deposit)
-                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say> """ + fname + """ """ + lname + """ your last deposit is """ + deposit_amount + """ shillings. Goodbye. </Say></Response> """
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits finishOnKey="#" timeout="10" callbackUrl=""><Say> """ + fname + """ """ + lname + """ your last deposit is """ + deposit_amount + """ shillings. If you would like to go back to the main menu, please press 0 followed by hash. </Say></GetDigits></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -162,7 +162,7 @@ class GetLastWithdraw(generics.CreateAPIView):
                 fname = str(withdrawal.user_id.first_name)
                 lname = str(withdrawal.user_id.last_name)
                 withdrawal_amount = str(withdrawal.withdrawal)
-                content = """<?xml version="1.0" encoding="utf-8"?><Response><Say> """ + fname + """ """ + lname + """ your last withdraw is """ + withdrawal_amount + """ shillings. Goodbye. </Say></Response> """
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits finishOnKey="#" timeout="10" callbackUrl=""><Say> """ + fname + """ """ + lname + """ your last withdraw is """ + withdrawal_amount + """ shillings. If you would like to go back to the main menu, please press 0 followed by hash. </Say></GetDigits></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
@@ -205,7 +205,7 @@ class GetAccountBalance(generics.CreateAPIView):
                 fname = str(account_balance.user_id.first_name)
                 lname = str(account_balance.user_id.last_name)
                 amount_balance = str(account_balance.account_balance)
-                content = """<?xml version="1.0" encoding="utf-8"?><Response> <Say>""" + fname + """ """ + lname + """ your account balance is """ + amount_balance + """ shillings. Goodbye. </Say></Response> """
+                content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits finishOnKey="#" timeout="10" callbackUrl=""><Say>""" + fname + """ """ + lname + """ your account balance is """ + amount_balance + """ shillings. If you would like to go back to the main menu, please press 0 followed by hash. </Say></GetDigits></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
