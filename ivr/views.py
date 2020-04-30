@@ -205,8 +205,7 @@ class GetAccountBalance(generics.CreateAPIView):
                 fname = str(account_balance.user_id.first_name)
                 lname = str(account_balance.user_id.last_name)
                 amount_balance = str(account_balance.account_balance)
-                content = """<?xml version="1.0" encoding="utf-8"?><Response><GetDigits timeout="10" 
-                finishOnKey="#" callbackUrl="https://262563e5.ngrok.io/call/account_balance/"><Say>""" + fname + """ """ + lname + """ your account balance is """ + amount_balance + """ shillings. Goodbye. </Say></Response> """
+                content = """<?xml version="1.0" encoding="utf-8"?><Response> <Say>""" + fname + """ """ + lname + """ your account balance is """ + amount_balance + """ shillings. Goodbye. </Say></Response> """
                 response = HttpResponse(content, content_type="application/xml; charset=utf-8")
                 response['Content-Length'] = len(content)
 
