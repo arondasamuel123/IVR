@@ -21,10 +21,9 @@
 
 ### Technologies Used
 ##### Python
-##### Django
+##### Django REST framework
 ##### PostgreSQL
-##### HTML5
-##### CSS3
+##### Africa's Talking voice API
 
 
 
